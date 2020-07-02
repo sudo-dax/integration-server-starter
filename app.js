@@ -42,7 +42,16 @@ mongoose.connect(dbConn, {
     });
 
 // Install middleware
-app.use(cors());
+const allowList = ['http://localhost:3000']
+const corsOptions = {
+    credentials: true,
+    origin: function(origin, callback) {
+        const allowListIndex = allowList.findIndex((url) => url.includes(origin));
+        callback(null, allowListIndex > -1)
+    }
+}
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(session({
     // resave and saveUninitialized set to false for deprecation warnings
